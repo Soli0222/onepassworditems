@@ -2,8 +2,12 @@ name: Release Charts
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - main
+      - feature/chart
+    paths:
+      - charts/**/*
+      - .github/workflows/release.yml
 
 jobs:
   release:
