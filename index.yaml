@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   onepassworditems:
   - apiVersion: v2
+    appVersion: 1.1.1
+    created: "2025-08-13T12:54:15.054844699Z"
+    description: A Helm chart for Kubernetes
+    digest: 8609f810b669d68aa2396737c2c7daf1470301506ebea5b32386f6f803390965
+    name: onepassworditems
+    type: application
+    urls:
+    - https://github.com/Soli0222/onepassworditems/releases/download/onepassworditems-1.1.1/onepassworditems-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v2
     appVersion: 1.1.0
     created: "2025-08-13T12:50:03.011102287Z"
     description: A Helm chart for Kubernetes
@@ -21,4 +31,4 @@ entries:
     urls:
     - https://github.com/Soli0222/onepassworditems/releases/download/onepassworditems-1.0.0/onepassworditems-1.0.0.tgz
     version: 1.0.0
-generated: "2025-08-13T12:50:03.011133315Z"
+generated: "2025-08-13T12:54:15.054862052Z"
