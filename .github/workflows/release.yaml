@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - charts/**/*
-      - .github/workflows/release.yml
+      - .github/workflows/release.yaml
 
 jobs:
   release:
