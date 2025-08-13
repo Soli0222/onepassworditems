@@ -1,0 +1,16 @@
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: storage-configuration
+  namespace: minio-tenant
+spec:
+  itemPath: "vaults/Kubernetes/items/minio_storage-configuration"
+
+---
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: storage-user
+  namespace: minio-tenant
+spec:
+  itemPath: "vaults/Kubernetes/items/minio_storage-user"

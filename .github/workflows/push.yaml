@@ -1,0 +1,68 @@
+name: Build and Push Helm Chart
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  REGISTRY: ghcr.io
+  CHART_NAME: onepassworditems
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Helm
+      uses: azure/setup-helm@v4
+      with:
+        version: 'latest'
+        
+    - name: Log into registry ${{ env.REGISTRY }}
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Extract metadata
+      id: meta
+      run: |
+        # Get chart version from Chart.yaml
+        CHART_VERSION=$(grep '^version:' Chart.yaml | awk '{print $2}')
+        echo "chart-version=${CHART_VERSION}" >> $GITHUB_OUTPUT
+        
+        # Set image tag based on ref type
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/}
+        elif [[ $GITHUB_REF == refs/heads/* ]]; then
+          VERSION=${GITHUB_SHA::8}
+        fi
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        echo "registry-path=${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.CHART_NAME }}" >> $GITHUB_OUTPUT
+        
+    - name: Package Helm chart
+      run: |
+        helm dependency update
+        helm package . --version ${{ steps.meta.outputs.chart-version }}
+        
+    - name: Push Helm chart to OCI registry
+      run: |
+        helm push ${{ env.CHART_NAME }}-${{ steps.meta.outputs.chart-version }}.tgz oci://${{ env.REGISTRY }}/${{ github.repository_owner }}
+        
+    - name: Verify chart push
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
+      run: |
+        echo "Chart successfully pushed to:"
+        echo "  Registry: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.CHART_NAME }}"
+        echo "  Version: ${{ steps.meta.outputs.chart-version }}"
+        echo ""
+        echo "To use this chart:"
+        echo "  helm install my-release oci://${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.CHART_NAME }} --version ${{ steps.meta.outputs.chart-version }}"

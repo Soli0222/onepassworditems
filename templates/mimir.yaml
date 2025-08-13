@@ -1,0 +1,7 @@
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: minio-secrets
+  namespace: mimir
+spec:
+  itemPath: vaults/Kubernetes/items/minio-secrets
