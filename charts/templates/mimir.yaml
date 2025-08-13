@@ -1,3 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mimir
+---
 apiVersion: onepassword.com/v1
 kind: OnePasswordItem
 metadata:
